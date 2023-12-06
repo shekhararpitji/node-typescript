@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { createClient } from 'redis';
-const client = createClient();
-const redis = () => __awaiter(void 0, void 0, void 0, function* () {
+export const client = createClient();
+export const redis = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield client.connect();
         console.log('redis server connected succesfully');
@@ -18,7 +18,4 @@ const redis = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log('error occured in redis', error.message);
     }
 });
-module.exports = {
-    client,
-    redis
-};
+//# sourceMappingURL=redis.config.js.map

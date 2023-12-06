@@ -7,8 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { addressService, deleteAddressService, addressListService, } from "../services/address.services.js";
-exports.addressController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+import { addressService, deleteAddressService, addressListService, } from "../services/address.services";
+export const addressController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const address = yield addressService(req);
         res.status(200).json({ message: "Address saved", data: address });
@@ -18,7 +18,7 @@ exports.addressController = (req, res) => __awaiter(void 0, void 0, void 0, func
         res.status(400).send("Invalid Address");
     }
 });
-exports.addressListController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const addressListController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const address = yield addressListService(req);
         if (!address) {
@@ -31,13 +31,14 @@ exports.addressListController = (req, res) => __awaiter(void 0, void 0, void 0, 
         res.status(400).json({ message: "Internal server error" });
     }
 });
-exports.deleteAddressController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const deleteAddressController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield deleteAddressService(req);
         res.json({ message: "Addresses deleted successfully" });
     }
     catch (error) {
-        console.error(error.message);
+        console.error(error);
         return res.status(500).json({ message: "Server Error" });
     }
 });
+//# sourceMappingURL=addressController.js.map

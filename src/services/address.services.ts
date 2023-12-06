@@ -1,7 +1,7 @@
-import { User }  from "../models/user.js";
-import { Address }  from "../models/address.js";
+import { User }  from "../models/user";
+import { Address }  from "../models/address";
 import { Op }  from "sequelize";
-import { validateToken }  from "../utils/authUtil.js";
+import { validateToken }  from "../utils/authUtil";
 import { Request,Response } from "express";
 
 

@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,10 +7,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const { User, Address } = require("../models");
-const { Op } = require("sequelize");
-const { validateToken } = require("../utils/authUtil");
-exports.addressService = (req) => __awaiter(void 0, void 0, void 0, function* () {
+import { User } from "../models/user";
+import { Address } from "../models/address";
+import { Op } from "sequelize";
+import { validateToken } from "../utils/authUtil";
+export const addressService = (req) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email } = yield validateToken(req);
         const user = yield User.findOne({
@@ -33,10 +33,10 @@ exports.addressService = (req) => __awaiter(void 0, void 0, void 0, function* ()
         return newAddress;
     }
     catch (error) {
-        console.error(error.message);
+        console.error(error);
     }
 });
-exports.addressListService = (req) => __awaiter(void 0, void 0, void 0, function* () {
+export const addressListService = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.id;
     const address = yield User.findAll({
         where: { id: userId },
@@ -44,7 +44,7 @@ exports.addressListService = (req) => __awaiter(void 0, void 0, void 0, function
     });
     return address;
 });
-exports.deleteAddressService = (req) => __awaiter(void 0, void 0, void 0, function* () {
+export const deleteAddressService = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const addressIds = req.body.addressIds;
     if (!addressIds || !Array.isArray(addressIds)) {
         return res.status(400).json({ error: "Invalid request format" });
@@ -57,3 +57,4 @@ exports.deleteAddressService = (req) => __awaiter(void 0, void 0, void 0, functi
         },
     });
 });
+//# sourceMappingURL=address.services.js.map

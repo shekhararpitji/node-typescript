@@ -8,14 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { validateToken } from "../utils/authUtil";
-exports.authMiddle = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+export const authMiddle = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const decoded = yield validateToken(req);
-        if (decoded.id) {
-            req.userId = decoded.id;
-            req.username = decoded.username;
-            req.email = decoded.email;
-            next();
+        if (typeof decoded !== 'string' && decoded.id) {
+            return decoded;
         }
         else {
             res.status(401).json({ message: "Unauthorized" });
@@ -25,3 +22,4 @@ exports.authMiddle = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         res.status(500).send("Server Error");
     }
 });
+//# sourceMappingURL=jwtVerify.js.map

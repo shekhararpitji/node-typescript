@@ -1,15 +1,15 @@
-"use strict";
-const express = require("express");
-const jwtVerify = require("../middlewares/jwtVerify");
-const userController = require("../controllers/userController");
+import express from "express";
+import { authMiddle } from "../middlewares/jwtVerify";
+import { deleteCtrl, forgotPassword, getAllCtrl, listController, loginCtrl, refresh, registerCtrl, resetPassword } from "../controllers/userController";
 const router = express.Router();
-router.post("/register", userController.registerCtrl);
-router.post("/login", userController.loginCtrl);
-router.get("/get", jwtVerify.authMiddle, userController.getAllCtrl);
-router.get("/list/:page", jwtVerify.authMiddle, userController.listController);
-router.put("/delete", jwtVerify.authMiddle, userController.deleteCtrl);
-router.post("/refresh", userController.refresh);
+router.post("/register", registerCtrl);
+router.post("/login", loginCtrl);
+router.get("/get", authMiddle, getAllCtrl);
+router.get("/list/:page", authMiddle, listController);
+router.put("/delete", authMiddle, deleteCtrl);
+router.post("/refresh", refresh);
 router.use("/address", require("./addressRoutes"));
-router.use("/forgot-password", userController.forgotPassword);
-router.use("/reset-password", userController.resetPassword);
+router.use("/forgot-password", forgotPassword);
+router.use("/reset-password", resetPassword);
 module.exports = router;
+//# sourceMappingURL=userRoutes.js.map

@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,13 +7,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const { validationResult } = require("express-validator");
-const { User } = require("../models");
-const bcrypt = require("bcryptjs");
-const randtoken = require("rand-token");
-const { client } = require("../config/redis.config");
-const { createToken } = require("../utils/authUtil");
-exports.loginService = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+import { validationResult } from "express-validator";
+import { User } from "../models/user.js";
+import bcrypt from "bcryptjs";
+import randtoken from "rand-token";
+import { client } from "../config/redis.config";
+import { createToken } from "../utils/authUtil";
+export const loginService = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username } = req.body;
     const user = yield User.findOne({
         where: {
@@ -29,7 +28,7 @@ exports.loginService = (req, res) => __awaiter(void 0, void 0, void 0, function*
     yield client.set(refreshToken, username);
     return { access_token, refreshToken };
 });
-exports.registerService = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const registerService = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = validationResult(req.body);
         if (!errors.isEmpty()) {
@@ -48,10 +47,10 @@ exports.registerService = (req, res) => __awaiter(void 0, void 0, void 0, functi
         });
     }
     catch (error) {
-        console.error(error.message);
+        console.error(error);
     }
 });
-exports.listService = (req) => __awaiter(void 0, void 0, void 0, function* () {
+export const listService = (req) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const page = parseInt(req.params.page);
         const startIndex = page * process.env.itemsPerPage - process.env.itemsPerPage;
@@ -61,6 +60,7 @@ exports.listService = (req) => __awaiter(void 0, void 0, void 0, function* () {
         return printUsers;
     }
     catch (error) {
-        console.error(error.message);
+        console.error(error);
     }
 });
+//# sourceMappingURL=user.services.js.map

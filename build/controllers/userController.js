@@ -7,12 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { loginService, registerService, listService, } from "../services/user.services.js";
-import { client } from "../config/redis.config.js";
-import { User } from "../models.js";
-import { validateToken, createToken } from "../utils/authUtil.js";
-import { emails } from "../utils/emailUtil.js";
-exports.registerCtrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+import { loginService, registerService, listService, } from "../services/user.services";
+import bcrypt from 'bcryptjs';
+import { client } from "../config/redis.config";
+import { User } from "../models/user";
+import { validateToken, createToken } from "../utils/authUtil";
+import { emails } from "../utils/emailUtil";
+import JWT from 'jsonwebtoken';
+export const registerCtrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield registerService(req, res);
         yield emails({
@@ -28,9 +30,9 @@ exports.registerCtrl = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(500).send("Server Error");
     }
 });
-exports.loginCtrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const loginCtrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { access_token, refreshToken } = yield loginService(req, res);
+        const { access_token, refreshToken } = (yield loginService(req, res)) || {};
         res.cookie("refreshToken", refreshToken, { secure: true, httpOnly: true });
         res.status(200).json({ jwt: access_token, refreshToken: refreshToken });
     }
@@ -39,7 +41,7 @@ exports.loginCtrl = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).send("Server Error");
     }
 });
-exports.getAllCtrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const getAllCtrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield User.findAll({ include: "addresses" });
         if (!user) {
@@ -52,7 +54,7 @@ exports.getAllCtrl = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).send("Server Error");
     }
 });
-exports.listController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const listController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const printUsers = yield listService(req);
         res.status(200).json({ users: printUsers });
@@ -62,9 +64,9 @@ exports.listController = (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).send("Server Error");
     }
 });
-exports.deleteCtrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const deleteCtrl = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const access_token = yield validateToken(req);
+        const access_token = yield validateToken(req.body);
         const user = yield User.destroy({ where: { id: access_token.id } });
         res.status(200).json({ user });
     }
@@ -73,7 +75,7 @@ exports.deleteCtrl = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(400).send("Server Error");
     }
 });
-exports.refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const refreshToken = req.cookies.refreshToken;
         const value = yield client.get(refreshToken);
@@ -84,7 +86,7 @@ exports.refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(400).send({ message: "invalid refreshToken" });
     }
 });
-exports.forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const email = req.body.email;
         const existingUser = yield User.findOne({ where: { email } });
@@ -100,12 +102,12 @@ exports.forgotPassword = (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(201).send({ message: "new token genrated successfully", token: newToken });
     }
     catch (error) {
-        console.error(error.message);
+        console.error(error);
     }
 });
-exports.resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.params.token;
-    const payload = yield JWT.verify(token, process.env.SECRET);
+    const payload = JWT.verify(token, process.env.SECRET);
     if (!payload) {
         return res.status(401).send({ message: "invalid token" });
     }
@@ -127,3 +129,4 @@ exports.resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function
     return res.status(200).send({ updatedRecord });
 });
 //lamda genericstype class interface 
+//# sourceMappingURL=userController.js.map

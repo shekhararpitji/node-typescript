@@ -3,9 +3,9 @@ import {
   addressService,
   deleteAddressService,
   addressListService,
-} from "../services/address.services.js";
+} from "../services/address.services";
 
-exports.addressController = async (req:Request, res:Response) => {
+export const addressController = async (req:Request, res:Response) => {
   try {
     const address = await addressService(req);
     res.status(200).json({ message: "Address saved", data: address });
@@ -15,7 +15,7 @@ exports.addressController = async (req:Request, res:Response) => {
   }
 };
 
-exports.addressListController = async (req:Request, res:Response) => {
+export const addressListController = async (req:Request, res:Response) => {
   try {
     const address = await addressListService(req);
     if (!address) {
@@ -28,7 +28,7 @@ exports.addressListController = async (req:Request, res:Response) => {
   }
 };
 
-exports.deleteAddressController = async (req:Request, res:Response) => {
+export const deleteAddressController = async (req:Request, res:Response) => {
   try {
     await deleteAddressService(req);
     res.json({ message : "Addresses deleted successfully" });

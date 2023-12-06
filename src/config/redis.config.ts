@@ -10,7 +10,4 @@ export const redis=async() => {
     }
 
 }
-// module.exports={
-//     client,
-//     redis
-// }
+
