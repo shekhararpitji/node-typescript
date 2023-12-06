@@ -1,6 +1,13 @@
 import nodemailer from "nodemailer";
 import { google } from "googleapis";
-export const emails = async(data) => {
+export interface EmailData {
+  to: string;
+  subject: string;
+  message: string;
+  url: string;
+  link: string;
+}
+export const emails = async(data:EmailData) => {
   const OAuth2 = google.auth.OAuth2;
   const OAuth2_client = new OAuth2(
     process.env.G_CLIENT_ID,
@@ -17,7 +24,7 @@ export const emails = async(data) => {
       clientSecret: process.env.G_CLIENT_SECRET,
       refreshToken: process.env.G_REFRESH_TOKEN,
       accessToken: access_token,
-    },
+    }as any,
   });
 
   const mail_options = {

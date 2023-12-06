@@ -1,22 +1,23 @@
-import  JWT from "jsonwebtoken";
+import { NextFunction } from 'express';
+import { userInterface ,CustomRequest } from './../../interfaces.td';
+import jwt from 'jsonwebtoken';
 
-export const createToken = (user) => {
+
+export const createToken = (user:userInterface ) => {
   const payload = {
-    id: user.id,
+    id: user.id?.toString(),
     email: user.email,
     username: user.username,
   };
-  const token = JWT.sign(payload, process.env.SECRET, { expiresIn: "15m" });
+  const token = jwt.sign(payload, process.env.SECRET, { expiresIn: "15m" });
   return token;
 };
 
- export const validateToken = async (req:Request) => {
-  const token = req.get("authorization").split(" ")[1];
-  const payload = JWT.verify(token, process.env.SECRET);
-  return payload;
-};
-
-// module.exports = {
-//   createToken,
-//   validateToken,
+//  export const validateToken = async (req:Request) => {
+//   // const { data } = await ApiHeader.get("api/search/all", authHeader());
+//   const token:string = req.get('authorization')?.split(" ")[1];
+//   const decoded = jwt.verify(token, process.env.SECRET);
+//   (req as CustomRequest).token = decoded;
 // };
+
+

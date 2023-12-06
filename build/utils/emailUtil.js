@@ -7,9 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import nodemailer from ("nodemailer");
-import { google } from ("googleapis");
-exports.emails = (data) => __awaiter(void 0, void 0, void 0, function* () {
+import nodemailer from "nodemailer";
+import { google } from "googleapis";
+export const emails = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const OAuth2 = google.auth.OAuth2;
     const OAuth2_client = new OAuth2(process.env.G_CLIENT_ID, process.env.G_CLIENT_SECRET);
     OAuth2_client.setCredentials({ refresh_token: process.env.G_REFRESH_TOKEN });
@@ -41,3 +41,4 @@ exports.emails = (data) => __awaiter(void 0, void 0, void 0, function* () {
         transporter.close();
     });
 });
+//# sourceMappingURL=emailUtil.js.map

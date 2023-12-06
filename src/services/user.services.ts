@@ -3,9 +3,9 @@ import { validationResult } from "express-validator";
 import { User } from "../models/user.js";
 import bcrypt from "bcryptjs";
 import randtoken from "rand-token";
-import { client } from "../config/redis.config.js";
+import { client } from "../config/redis.config";
 
-import { createToken } from "../utils/authUtil.js";
+import { createToken } from "../utils/authUtil";
 
 export const loginService = async (req:Request, res:Response) => {
   const { username } = req.body;
@@ -52,8 +52,8 @@ export const registerService = async (req:Request,res:Response) => {
 export const listService = async (req:Request) => {
   try {
     const page = parseInt(req.params.page);
-    const startIndex:number = page * process.env.itemsPerPage - process.env.itemsPerPage;
-    const endIndex = page * process.env.itemsPerPage;
+    const startIndex = page * +process.env.itemsPerPage - +process.env.itemsPerPage;
+    const endIndex = page * +process.env.itemsPerPage;
     const data = await User.findAll();
     const printUsers = data.slice(startIndex, endIndex);
     return printUsers;

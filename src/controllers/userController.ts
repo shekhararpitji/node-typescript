@@ -1,17 +1,31 @@
+// import { resultInterface, tokenInterface } from './../../interfaces.td';
 import {
   loginService,
   registerService,
   listService,
-} from "../services/user.services.js";
+} from "../services/user.services";
 import bcrypt from 'bcryptjs'
-import  { client }  from "../config/redis.config.js";
-import  { User }  from "../models/user.js";
-import  { validateToken, createToken }  from "../utils/authUtil.js";
-import  { emails }  from "../utils/emailUtil.js";
-import JWT from 'jsonwebtoken'
+import  { client }  from "../config/redis.config";
+import  { User }  from "../models/user";
+import  { createToken }  from "../utils/authUtil";
+import  {  emails }  from "../utils/emailUtil";
+import JWT, { JwtPayload } from 'jsonwebtoken'
 import { Request,Response } from "express";
 
-exports.registerCtrl = async (req:Request, res:Response) => {
+interface Users {
+  id: number;
+}
+interface EmailData {
+  to: string;
+  subject: string;
+  message: string;
+  url: string;
+  link: string;
+}
+interface AccessToken {
+  id: number;
+}
+export const registerCtrl = async (req:Request, res:Response) => {
   try {
     await registerService(req,res);
     await emails({
@@ -19,7 +33,7 @@ exports.registerCtrl = async (req:Request, res:Response) => {
       link:"",
       message:"registered successfully",
       subject:"User registration"
-    })
+    }as EmailData)
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.error(error);
@@ -29,7 +43,13 @@ exports.registerCtrl = async (req:Request, res:Response) => {
 
 export const loginCtrl = async (req:Request, res:Response) => {
   try {
-    const { access_token, refreshToken } = await loginService(req, res);
+    const result = await loginService(req, res);
+    if (!result ) {
+      return res.status(500).send("Invalid login response");
+    }
+
+    const { access_token, refreshToken } = result;
+
     res.cookie("refreshToken", refreshToken, { secure: true, httpOnly: true });
     res.status(200).json({ jwt: access_token, refreshToken: refreshToken });
   } catch (error) {
@@ -63,8 +83,10 @@ export const listController = async (req:Request, res:Response) => {
 
 export const deleteCtrl = async (req:Request, res:Response) => {
   try {
-    const access_token =await validateToken(req);
-    const user = await User.destroy({ where: { id: access_token.id } });
+    // const access_token = req.get('authorization')?.split(" ")[1];
+    console.log(req);
+    const data =req.body.id
+    const user = await User.destroy({ where: { id:data } });
 
     res.status(200).json({ user });
   } catch (error) {
@@ -96,7 +118,7 @@ export const forgotPassword=async(req:Request,res:Response)=>{
       link:`http://localhost/user/reset-password/${newToken}`,
       message:"token for forgot password",
       subject:"Forgot Password"
-    })
+    }as EmailData)
     res.status(201).send({message:"new token genrated successfully", token:newToken})
   } catch (error) {
 console.error(error)  }
@@ -104,7 +126,7 @@ console.error(error)  }
 
 export const resetPassword=async(req:Request,res:Response)=>{
     const token=req.params.token;
-    const payload = await JWT.verify(token, process.env.SECRET);
+    const payload = JWT.verify(token, process.env.SECRET)as JwtPayload;
     if(!payload){
       return res.status(401).send({message:"invalid token"})
     }

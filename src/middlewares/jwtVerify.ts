@@ -1,13 +1,21 @@
-import { validateToken } from "../utils/authUtil.js";
+import jwt, { Secret, JwtPayload } from "jsonwebtoken";
+import { NextFunction, Request, Response } from "express";
+export interface CustomRequest extends Request {
+  token: string | JwtPayload;
+}
 
-export const authMiddle = async (req:any, res:any, next:any) => {
+export const authMiddle = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const decoded =await validateToken(req);
-    if (decoded.id) {
-      req.userId = decoded.id;
-      req.username = decoded.username;
-      req.email = decoded.email;
+    const token: string = req.get("authorization")?.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.SECRET);
+    (req as CustomRequest).token = decoded;
+    if (typeof decoded !== "string") {
       next();
+      return decoded;
     } else {
       res.status(401).json({ message: "Unauthorized" });
     }

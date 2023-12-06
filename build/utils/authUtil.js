@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,8 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const JWT = require("jsonwebtoken");
-const createToken = (user) => {
+import JWT from 'jsonwebtoken';
+export const createToken = (user) => {
     const payload = {
         id: user.id,
         email: user.email,
@@ -18,12 +17,10 @@ const createToken = (user) => {
     const token = JWT.sign(payload, process.env.SECRET, { expiresIn: "15m" });
     return token;
 };
-const validateToken = (req) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.get("authorization").split(" ")[1];
-    const payload = JWT.verify(token, process.env.SECRET);
-    return payload;
+export const validateToken = (req) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const token = (_a = req.get("authorization")) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+    const decoded = JWT.verify(token, process.env.SECRET);
+    req.token = decoded;
 });
-module.exports = {
-    createToken,
-    validateToken,
-};
+//# sourceMappingURL=authUtil.js.map
