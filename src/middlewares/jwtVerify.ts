@@ -10,8 +10,8 @@ export const authMiddle = async (
   next: NextFunction
 ) => {
   try {
-    const token: string = req.get("authorization")?.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.SECRET);
+    const token = req.get("authorization")?.split(" ")[1];
+    const decoded = jwt.verify(token as string, process.env.SECRET as Secret);
     (req as CustomRequest).token = decoded;
     if (typeof decoded !== "string") {
       next();

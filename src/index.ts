@@ -1,8 +1,8 @@
-const express = require("express");
-const cookieparser = require("cookie-parser");
-const { redis } = require("./config/redis.config");
+import express from "express";
+import cookieparser from "cookie-parser";
+require ("./config/redis.config");
 require("dotenv").config();
-redis();
+// redis();
 const app = express();
 app.use(express.json());
 app.use(cookieparser());
