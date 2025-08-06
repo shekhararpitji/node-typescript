@@ -1,13 +1,13 @@
-import { Request,Response } from 'express';
+import { Request, Response } from "express";
 import {
   addressService,
   deleteAddressService,
   addressListService,
 } from "../services/address.services";
 
-export const addressController = async (req:Request, res:Response) => {
+export const addressController = async (req: Request, res: Response) => {
   try {
-    const address = await addressService(req);
+    const address = await addressService(req, res);
     res.status(200).json({ message: "Address saved", data: address });
   } catch (error) {
     console.error(error);
@@ -15,7 +15,7 @@ export const addressController = async (req:Request, res:Response) => {
   }
 };
 
-export const addressListController = async (req:Request, res:Response) => {
+export const addressListController = async (req: Request, res: Response) => {
   try {
     const address = await addressListService(req);
     if (!address) {
@@ -28,10 +28,10 @@ export const addressListController = async (req:Request, res:Response) => {
   }
 };
 
-export const deleteAddressController = async (req:Request, res:Response) => {
+export const deleteAddressController = async (req: Request, res: Response) => {
   try {
-    await deleteAddressService(req);
-    res.json({ message : "Addresses deleted successfully" });
+    await deleteAddressService(req, res);
+    res.json({ message: "Addresses deleted successfully" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server Error" });
