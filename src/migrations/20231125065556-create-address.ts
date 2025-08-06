@@ -1,46 +1,47 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
+import { QueryInterface, DataTypes } from 'sequelize';
+
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up(queryInterface: QueryInterface) {
     await queryInterface.createTable('Addresses', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
       },
       address: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       state: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       pin_code: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       phone_no: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING
       },
       userId:{
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
 
         references: {
           model: 'users',
           key:"id",
-          as:"userId"
         },onDelete:'SET NULL'
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: DataTypes.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: DataTypes.DATE
       }
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface: QueryInterface) {
     await queryInterface.dropTable('Addresses');
   }
 };

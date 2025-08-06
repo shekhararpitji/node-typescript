@@ -1,27 +1,70 @@
-'use strict';
-import {
-  Model
-} from 'sequelize-typescript';
-export const Address = (sequelize, DataTypes) => {
-  class Address extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      Address.belongsTo(models.User, { foreignKey: 'userId' });
-    }
-  }
-  Address.init({
-    address: DataTypes.STRING,
-    state: DataTypes.STRING,
-    pin_code: DataTypes.STRING,
-    phone_no: DataTypes.STRING,
-    userId: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'Address',
-  });
-  return Address;
-};
+// "use strict";
+// import "reflect-metadata";
+// import {
+//   BelongsTo,
+//   Column,
+//   ForeignKey,
+//   Model,
+//   Table,
+// } from "sequelize-typescript";
+// import { User } from "./user";
+// import { DataTypes } from "sequelize";
+
+// @Table
+// export class Address extends Model {
+//   @Column({
+//     type: DataTypes.STRING,
+//     allowNull: false,
+//   })
+//   address?: string;
+
+//   @Column({
+//     type: DataTypes.STRING,
+//     allowNull: false,
+//   })
+//   state?: string;
+
+//   @Column({
+//     type: DataTypes.STRING,
+//     allowNull: false,
+//   })
+//   pin_code?: string;
+
+//   @Column({
+//     type: DataTypes.STRING,
+//     allowNull: false,
+//   })
+//   phone_no?: string;
+
+//   @ForeignKey(() => User)
+//   @Column({
+//     type: DataTypes.INTEGER,
+//     allowNull: false,
+//   })
+//   userId?: number;
+
+//   @BelongsTo(() => User)
+//   user?: User;
+// }
+
+
+import { sequelize } from './index';
+
+import { Model, InferAttributes, InferCreationAttributes, DataTypes, ForeignKey } from 'sequelize';
+import { User } from './user';
+
+export class Address extends Model<InferAttributes<Address>, InferCreationAttributes<Address>> {
+ declare id: number;
+ declare userId: ForeignKey<number>;
+}
+
+
+Address.belongsTo(User);
+
+Address.init({
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+}, { sequelize });
